@@ -203,11 +203,17 @@
 </section>
 
 
-<section id="video-bg" class="hidden-sm hidden-xs">
-    <div id="bgndVideo" class="player"
-         data-property="{videoURL:'https://www.youtube.com/watch?v=ZH0BnTwMQRw',containment:'#video-bg',autoPlay:true, mute:False, showControls:True, startAt:0, stopAt:188, opacity:1}">
+<section id="video-iframe" class="section-padding">
+    <div class="video-wrapper" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;">
+        <iframe src="https://www.youtube.com/embed/ZH0BnTwMQRw?si=3zvI8m50IlE3Nzjd"
+                title="Video Grottammare"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                style="position:absolute;top:0;left:0;width:100%;height:100%;">
+        </iframe>
     </div>
-    <div id="video-content">
+    <div id="video-iframe-caption" style="text-align:center;padding:20px 0;">
         <h5>Grottammare</h5>
         <p>dove il nostro sì si veste di mare, luce e amore</p>
     </div>
