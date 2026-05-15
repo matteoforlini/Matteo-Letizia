@@ -248,50 +248,63 @@ function initMap() {
     });
 
     var bounds = new google.maps.LatLngBounds();
+    var infoWindow = new google.maps.InfoWindow();
     var places = [
         {
             title: 'Casa dello sposo',
             position: {lat: 42.873163089179926, lng: 13.760329266267647},
-            content: 'Via degli Ulivi 9, Spinetoli'
+            content: 'Via degli Ulivi 9, Spinetoli',
+            link: 'https://www.google.com/maps/place/Via+degli+Ulivi,+9,+63078+Pagliare+del+Tronto+AP/@42.8730019,13.7577651,17z/data=!3m1!4b1!4m6!3m5!1s0x1331f0cf73747005:0x16789f61a86a2f4a!8m2!3d42.872998!4d13.76034!16s%2Fg%2F11csg9j7qv?entry=ttu&g_ep=EgoyMDI2MDUxMi4wIKXMDSoASAFQAw%3D%3D'
         },
         {
             title: 'Casa della sposa',
-            position: {lat: 42.97438821809071, lng: 13.869712793264085},
-            content: 'Via degli Allori 2, Grottammare'
+            position: {lat: 42.974238071553664, lng: 13.869775831906201},
+            content: 'Via degli Allori 2, Grottammare',
+            link: 'https://www.google.com/maps/place/Via+Degli+Allori,+2,+63066+Grottammare+AP/@42.9739427,13.8617802,15z/data=!4m6!3m5!1s0x13321fad6b830e07:0x44665dc3a1a93aec!8m2!3d42.9742234!4d13.8697879!16s%2Fg%2F11c4qlhqv8?entry=ttu&g_ep=EgoyMDI2MDUxMi4wIKXMDSoASAFQAw%3D%3D' 
         },
         {
             title: 'Chiesa',
             position: {lat: 42.97186427216359, lng: 13.875066910450009},
-            content: 'Parrocchia Gran Madre di Dio, Via Romagna 1, Grottammare'
+            content: 'Parrocchia Gran Madre di Dio, Via Romagna 1, Grottammare',
+            link: 'https://www.google.com/maps/place/Chiesa+Parrocchiale+della+Gran+Madre+di+Dio/@42.9091784,13.7043667,11z/data=!4m6!3m5!1s0x13321fb1eba736cf:0xefece0799b43460d!8m2!3d42.9718172!4d13.875024!16s%2Fg%2F11csq9x2_w?entry=ttu&g_ep=EgoyMDI2MDUxMi4wIKXMDSoASAFQAw%3D%3D'
         },
         {
             title: 'Ristorante',
             position: {lat: 43.048396840803, lng: 13.850689423950037},
-            content: 'Parco sul Mare, Via Boccabianca 32, Cupra Marittima'
+            content: 'Parco sul Mare, Via Boccabianca 32, Cupra Marittima',
+            link: 'https://www.google.com/maps/place/Parco+Sul+Mare/@43.0482126,13.8481038,17z/data=!3m1!4b1!4m6!3m5!1s0x13321941a1b48645:0x3d02df3eb1211ca4!8m2!3d43.0482087!4d13.8506787!16s%2Fg%2F1v90f0qb?entry=ttu&g_ep=EgoyMDI2MDUxMi4wIKXMDSoASAFQAw%3D%3D'
         }
     ];
 
-    var infowindow = new google.maps.InfoWindow();
-
     places.forEach(function (place) {
         var marker = new google.maps.Marker({
-            position: place.position,
             map: map,
+            position: place.position,
             title: place.title
         });
 
         bounds.extend(place.position);
 
-        marker.addListener('click', function () {
-            infowindow.setContent('<strong>' + place.title + '</strong><br>' + place.content);
-            infowindow.open(map, marker);
+            marker.addListener('click', function () {
+                // Apri la scheda del luogo: usa il link personalizzato se presente, altrimenti ricerca per nome + indirizzo
+                var detailUrl = place.link && place.link.length
+                    ? place.link
+                    : 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(place.title + ' ' + place.content);
+                // Mantieni la navigazione verso le coordinate
+                var directionsUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(place.position.lat + ',' + place.position.lng);
+            var html = '<div style="line-height:1.4;">' +
+                '<strong>' + place.title + '</strong><br>' +
+                place.content +
+                '<div style="margin-top:8px;">' +
+                '<a href="' + detailUrl + '" target="_blank" rel="noopener noreferrer" style="margin-right:12px;color:#1a73e8;text-decoration:none;">Apri scheda</a>' +
+                '<a href="' + directionsUrl + '" target="_blank" rel="noopener noreferrer" style="color:#1a73e8;text-decoration:none;">Naviga</a>' +
+                '</div></div>';
+            infoWindow.setContent(html);
+            infoWindow.open(map, marker);
         });
     });
 
-    // Salva bounds globalmente per il pulsante zoom
     window.mapBounds = bounds;
-
-    // Event listener per il pulsante zoom
     document.getElementById('zoom-map-btn').addEventListener('click', function() {
         map.fitBounds(window.mapBounds);
     });
